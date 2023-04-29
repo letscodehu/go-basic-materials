@@ -1,10 +1,16 @@
 package main
 
-import "letscodehu/classifier/test"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
-    test.Some()
-    test.Stuff()
-    test.Stuff()
-    test.Stuff()
+    if len(os.Args) < 2 {
+        fmt.Println("No target directory specified!")
+        fmt.Println("Usage: classifier <directory>")
+        return
+    }
+    directory := os.Args[1]
+    fmt.Println(directory)
 }
