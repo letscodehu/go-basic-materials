@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -26,7 +27,23 @@ func main() {
 		fmt.Println(err, "is not a directory.")
 		os.Exit(1)
 	}
+	// n := 0
+	// for n < len(files) {
+	// 	fmt.Println(n, files[n].Name())
+	// 	n++
+	// }
+	// for i := 0; i < len(files); i++ {
+	// 	if i == 2 {
+	// 		break
+	// 	}
+	// 	fmt.Println(i, files[i].Name())
+	// }
 	for index, file := range files {
-		fmt.Println(index, file.Name())
+		name := file.Name()
+		extension := filepath.Ext(name)
+		fmt.Println(index, name, extension)
 	}
+	// for {
+	// 	fmt.Println("Test")
+	// }
 }
