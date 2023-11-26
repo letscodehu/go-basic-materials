@@ -6,7 +6,13 @@ import (
 	"path/filepath"
 )
 
+// .txt Documents
+// .doc Documents
 func main() {
+	mappings := map[string]string{
+		".jpg": "Pictures",
+		".txt": "Documents",
+	}
 	if len(os.Args) < 2 {
 		fmt.Println("No target directory specified!")
 		fmt.Println("Usage: classifier <directory>")
@@ -24,26 +30,18 @@ func main() {
 	}
 	files, err := os.ReadDir(directory)
 	if err != nil {
-		fmt.Println(err, "is not a directory.")
+		fmt.Println(directory, "is not readable.")
 		os.Exit(1)
 	}
-	// n := 0
-	// for n < len(files) {
-	// 	fmt.Println(n, files[n].Name())
-	// 	n++
-	// }
-	// for i := 0; i < len(files); i++ {
-	// 	if i == 2 {
-	// 		break
-	// 	}
-	// 	fmt.Println(i, files[i].Name())
-	// }
-	for index, file := range files {
+	for _, file := range files {
 		name := file.Name()
 		extension := filepath.Ext(name)
-		fmt.Println(index, name, extension)
+		target, ok := mappings[extension]
+		if ok {
+			fmt.Println("Moving", name, "to", target)
+		} else {
+			fmt.Println("Ignoring", name)
+		}
 	}
-	// for {
-	// 	fmt.Println("Test")
-	// }
+
 }
