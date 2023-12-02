@@ -6,12 +6,12 @@ import (
 	"path/filepath"
 )
 
-// .txt Documents
-// .doc Documents
 func main() {
 	mappings := map[string]string{
 		".jpg": "Pictures",
+		".png": "Pictures",
 		".txt": "Documents",
+		".doc": "Documents",
 	}
 	if len(os.Args) < 2 {
 		fmt.Println("No target directory specified!")
@@ -30,7 +30,7 @@ func main() {
 	}
 	files, err := os.ReadDir(directory)
 	if err != nil {
-		fmt.Println(directory, "is not readable.")
+		fmt.Println(err, "is not a directory.")
 		os.Exit(1)
 	}
 	for _, file := range files {
@@ -38,10 +38,21 @@ func main() {
 		extension := filepath.Ext(name)
 		target, ok := mappings[extension]
 		if ok {
-			fmt.Println("Moving", name, "to", target)
+			Move(name, target)
 		} else {
 			fmt.Println("Ignoring", name)
 		}
 	}
-
+}
+func JustPrint(filename string, directory string) {
+	fmt.Println("Moving", filename, "to", directory)
+}
+func Move(filename string, directory string) {
+	fmt.Println("Moving", filename, "to", directory)
+	os.Mkdir(directory, 0755)
+	target := filepath.Join(directory, filename)
+	err := os.Rename(filename, target)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
