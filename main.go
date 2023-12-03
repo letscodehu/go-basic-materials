@@ -38,21 +38,28 @@ func main() {
 		extension := filepath.Ext(name)
 		target, ok := mappings[extension]
 		if ok {
-			Move(name, target)
+			err := Move(name, target)
+			if err != nil {
+				fmt.Println(err)
+			}
 		} else {
 			fmt.Println("Ignoring", name)
 		}
 	}
 }
-func JustPrint(filename string, directory string) {
+func Move(filename string, directory string) error {
 	fmt.Println("Moving", filename, "to", directory)
-}
-func Move(filename string, directory string) {
-	fmt.Println("Moving", filename, "to", directory)
-	os.Mkdir(directory, 0755)
+
+    if _, err := os.Stat(directory); os.IsNotExist(err) {
+        fmt.Println("Creating directory:", directory)
+        if err := os.Mkdir(directory, 0755); err != nil {
+            return fmt.Errorf("Error creating directory: %s", err)
+        }
+    }
 	target := filepath.Join(directory, filename)
-	err := os.Rename(filename, target)
-	if err != nil {
-		fmt.Println(err)
+	if err := os.Rename(filename, target); err != nil {
+		return fmt.Errorf("Error moving file: %s", err)
 	}
+	fmt.Println("Move successful.")
+	return nil
 }
