@@ -1,12 +1,30 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 func main() {
+	file, _ := os.Open("numbers.txt")
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Closing file due to panic:", r)
+		} else {
+			fmt.Println("Closing file normally")
+		}
+		file.Close()
+	}()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		number, _ := strconv.Atoi(scanner.Text())
+		fmt.Println(500 / number)
+	}
+}
+func main2() {
 	mappings := map[string]string{
 		".jpg": "Pictures",
 		".png": "Pictures",
@@ -47,15 +65,16 @@ func main() {
 		}
 	}
 }
+
 func Move(filename string, directory string) error {
 	fmt.Println("Moving", filename, "to", directory)
 
-    if _, err := os.Stat(directory); os.IsNotExist(err) {
-        fmt.Println("Creating directory:", directory)
-        if err := os.Mkdir(directory, 0755); err != nil {
-            return fmt.Errorf("Error creating directory: %s", err)
-        }
-    }
+	if _, err := os.Stat(directory); os.IsNotExist(err) {
+		fmt.Println("Creating directory:", directory)
+		if err := os.Mkdir(directory, 0755); err != nil {
+			return fmt.Errorf("Error creating directory: %s", err)
+		}
+	}
 	target := filepath.Join(directory, filename)
 	if err := os.Rename(filename, target); err != nil {
 		return fmt.Errorf("Error moving file: %s", err)
